@@ -1,0 +1,81 @@
+.project {
+    &__wrapper {
+        width: 30%;
+        padding: 20px 0 0 50px;
+    }
+
+    &__title {
+        font-size: 26px;
+        font-weight: 500;
+        padding: 0 0 20px 0;
+    }
+
+    &__projects {
+        display: flex;
+        flex-direction: column;
+        padding: 30px;
+        border-radius: 20px;
+        background-color: $color-bg;
+    }
+
+    &__create {
+        font-size: 18px;
+        font-weight: 500;
+        padding: 10px 70px;
+        border-radius: 20px;
+        background-color: $color-button-accent;
+        color: white;
+        border: none;
+        transition: all .2s ease;
+
+        &:active {
+            letter-spacing: 0.5px;
+        }
+
+        &:focus {
+            outline: none;
+        }
+
+        &:hover {
+            cursor: pointer;
+            background-color: #44a7e0;
+        }
+    }
+
+    &__progress,
+    &__ready {
+        font-size: 18px;
+        margin-top: 15px;
+    }
+
+    &__item {
+        display: flex;
+        align-items: center;
+        padding: 15px 10px;
+        border-radius: 20px;
+        transition: all .2s ease;
+
+        &:hover {
+            cursor: pointer;
+            background-color: #F0F0F3;
+        }
+
+        &.active {
+            background-color: #F0F0F3;
+        }
+    }
+
+    &__pic {
+        border-radius: 50px;
+        width: 50px;
+        height: 50px;
+    }
+
+    &__name {
+        font-size: $font-size-medium;
+        font-weight: 500;
+        color: $color-text;
+        margin-left: 10px;
+    }
+
+}

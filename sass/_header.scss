@@ -1,9 +1,16 @@
-.header-wrapper {
-    display: flex;
-    height: 100px;
-    padding: 0 50px;
+@import "_design";
 
-    &__left, &__right {
+.header {
+
+    &__wrapper {
+        background-color: $color-bg;
+        display: flex;
+        height: 100px;
+        padding: 0 50px;
+    }
+
+    &__left,
+    &__right {
         display: flex;
         align-items: center;
         height: 100%;

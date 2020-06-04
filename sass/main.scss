@@ -1,12 +1,13 @@
+@import "_body";
 @import "_header";
-@import "_project";
-@import "_project-info";
-@import "_user";
+@import "_projects";
 
-.main-wrapper {
-    padding: 30px 50px 0 50px;
-    display: flex;
-    color: #282828;
+.main {
+    &__wrapper {
+        padding: 30px 50px 0 50px;
+        display: flex;
+        color: #282828;
+    }
 
     &__modal {
         /* Скрываем окна  */

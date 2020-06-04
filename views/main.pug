@@ -1,35 +1,25 @@
 doctype html
 html
-    head
-    meta(charset = 'utf-8', lang="ru")
+  head
+    meta(charset = 'utf-8' lang="ru")
     title Main Page
-    link(rel="stylesheet", href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500&display=swap")
+    link(rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500&display=swap")
     style
-        include ../public/css/body.css
-        include ../public/css/main.css
+      include ../public/css/main.css
     body
-        script(src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js")
-        include ./header
-        .main-wrapper
-            include ./project
-            if admin == 1
-                include ./project-info
-                .main-wrapper__modal(data-modal="1")
-                    svg.main-wrapper__cross.js-modal-close(xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24")
-                        path(d="M23.954 21.03l-9.184-9.095 9.092-9.174-2.832-2.807-9.09 9.179-9.176-9.088-2.81 2.81 9.186 9.105-9.095 9.184 2.81 2.81 9.112-9.192 9.18 9.1z")
-                    .main-wrapper__title Создание проекта
-                    form.main-wrapper__create-project(name="create_project", method="POST", action="/createProject")
-                        .main-wrapper__title-project
-                            p Название проекта
-                            input(type="text" placeholder="Название проекта" name="title")
-                        .main-wrapper__title-project
-                            p Примерная дата окончания
-                            input(type="date" name="date")
-                        button.bg-blue(type="submit") Создать
-                .main-wrapper__overlay
-                script
-                    include ../public/scripts/main.js
-            else
-                include ./user
-                script
-                    include ../public/scripts/user.js
+      script(src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js")
+      include ./header
+      include ./projects
+      .main__modal(data-modal="1")
+        svg.main__cross.js-modal-close(xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24")
+          path(d="M23.954 21.03l-9.184-9.095 9.092-9.174-2.832-2.807-9.09 9.179-9.176-9.088-2.81 2.81 9.186 9.105-9.095 9.184 2.81 2.81 9.112-9.192 9.18 9.1z")
+        .main__title Создание проекта
+        form.main__create-project(name="create_project" method="POST" action="/createProject")
+          .main__title-project
+            p Название проекта
+            input(type="text" placeholder="Название проекта" name="title")
+          .main__title-project
+            p Примерная дата окончания
+            input(type="date" name="date")
+          button.main__submit(type="submit") Создать
+        .main__overlay

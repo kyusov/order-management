@@ -1,0 +1,16 @@
+.project__wrapper
+    .project__title Проекты
+    .project__projects
+        button.project__create Добавить проект
+        .project__progress Выполняемые проекты
+            ul.project__list
+                each e in progress
+                    li.project__item
+                        .project__pic(style=`background-color:${e.pic};`)
+                        .project__name #{e.title}
+        .project__ready.grey Выполненные проекты
+            ul.project__list
+                each e in ready
+                    li.project__item
+                        .project__pic(style=`background-color:${e.pic};`)
+                        .project__name #{e.title}
