@@ -1,0 +1,31 @@
+* {
+    font-family: 'Roboto', sans-serif;
+    padding: 0;
+    margin: 0;
+    box-sizing: border-box;
+    color: #282828;
+}
+
+body {
+    background-color: #e5e5e5;
+}
+
+.bg-white {
+    background-color: #ffffff;
+}
+
+.grey {
+    color: #B9B9B9;
+}
+
+.bg-grey {
+    background-color: #e5e5e5;
+}
+
+.bg-blue {
+    background-color: #3A8BBB;
+}
+
+.bg-grey-light {
+    background-color: #F0F0F3;
+}

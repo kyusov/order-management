@@ -1,0 +1,16 @@
+.project-wrapper
+    .project-wrapper__title.bg-grey Проекты
+    .project-wrapper__projects.bg-white
+        button.project-wrapper__create.bg-blue Добавить проект
+        .project-wrapper__progress.grey Выполняемые проекты
+            ul.project-wrapper__list
+                each e in progress
+                    li.project-wrapper__item
+                        .project-wrapper__pic(style=`background-color:${e.pic};`)
+                        .project-wrapper__name #{e.title}
+        .project-wrapper__ready.grey Выполненные проекты
+            ul.project-wrapper__list
+                each e in ready
+                    li.project-wrapper__item
+                        .project-wrapper__pic(style=`background-color:${e.pic};`)
+                        .project-wrapper__name #{e.title}

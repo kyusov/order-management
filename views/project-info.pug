@@ -1,0 +1,29 @@
+.project-info-wrapper
+    .project-info-wrapper__title
+        .project-info-wrapper__left
+            div Выберите проект
+        .project-info-wrapper__right
+            button.project-info-wrapper__finish-project.bg-blue Сдать проект
+    table.project-info-wrapper__table-ready
+        thead
+            tr
+                th Выполняемая услуга
+                th Сотрудник
+                th Время полнения
+                th Менеджмент
+        tbody
+            tr.project-info-wrapper__blank
+                td
+                    select
+                        option(value="", disabled, selected, hidden) Выберите услугу
+                        each e, i in tasks_type
+                            option(value=`${e}`) #{e}
+                td
+                    select
+                        option(value="", disabled, selected, hidden) Имя сотрудника
+                        each e, i in employees
+                            option(value=`${e}`) #{e}
+                td
+                    input(type="date", name="date_task", value="Назначить время")
+                td
+                    button.project-info-wrapper__add.bg-blue Добавить             

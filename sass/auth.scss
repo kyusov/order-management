@@ -1,0 +1,48 @@
+.wrapper {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+
+    &__form {
+        background-color: #ffffff;
+        padding: 50px 40px;
+        border-radius: 20px;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-evenly;
+    }
+
+    &__email,
+    &__password {
+        padding: 8px;
+        font-size: 14px;
+        border: 2px solid #b9b9b9;
+        border-radius: 10px;
+
+        &:active, &:focus {
+            outline: none;
+        }
+    }
+
+    &__password, &__login {
+        margin-top: 10px;
+    }
+
+    &__login {
+        border: none;
+        border-radius: 10px;
+        background-color: #3A8BBB;
+        color: #fff;
+        font-size: 14px;
+        padding: 10px;
+
+        &:focus {
+            outline: none;
+        }
+
+        &:hover {
+            background-color: #44a7e0;
+        }
+    }
+}

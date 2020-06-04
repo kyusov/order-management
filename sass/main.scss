@@ -1,0 +1,138 @@
+@import "_header";
+@import "_project";
+@import "_project-info";
+@import "_user";
+
+.main-wrapper {
+    padding: 30px 50px 0 50px;
+    display: flex;
+    color: #282828;
+
+    &__modal {
+        /* Скрываем окна  */
+        opacity: 0;
+        visibility: hidden;
+
+        /*  Установаем ширину окна  */
+        width: 100%;
+        max-width: 500px;
+
+        /*  Центрируем и задаем z-index */
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        z-index: 3;
+        /* Должен быть выше чем у подложки*/
+
+        /*  Побочные стили   */
+        box-shadow: 0 3px 10px -0.5px rgba(0, 0, 0, 0.2);
+        text-align: center;
+        padding: 10px;
+        border-radius: 3px;
+        background-color: #fff;
+        transition: 0.3s all;
+    }
+
+    &__overlay {
+        opacity: 0;
+        visibility: hidden;
+
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0, 0, 0, 0.5);
+        z-index: 2;
+        transition: 0.3s all;
+    }
+
+    &__modal {
+        &.active {
+            opacity: 1;
+            visibility: visible;
+        }
+    }
+
+    &__overlay {
+        &.active {
+            opacity: 1;
+            visibility: visible;
+        }
+    }
+
+    &__cross {
+        width: 15px;
+        height: 15px;
+        position: absolute;
+        top: 20px;
+        right: 20px;
+        fill: #444;
+        cursor: pointer;
+    }
+
+    &__title {
+        font-size: 24px;
+        font-weight: 500;
+        text-align: center;
+        padding: 30px;
+    }
+
+    &__create-project {
+        padding: 10px 15px;
+
+
+        button {
+            margin-top: 50px;
+            width: 100%;
+            font-size: 18px;
+            font-weight: 500;
+            padding: 10px 70px;
+            border-radius: 5px;
+            color: #ffffff;
+            border: none;
+            transition: all .2s ease;
+
+            &:active {
+                letter-spacing: 0.5px;
+            }
+
+            &:focus {
+                outline: none;
+            }
+
+            &:hover {
+                cursor: pointer;
+                background-color: #44a7e0;
+            }
+        }
+    }
+
+    &__title-project {
+        font-size: 18px;
+        font-weight: 500;
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+        margin-top: 15px;
+
+        &:first-child {
+            margin: 0;
+        }
+
+        input {
+            width: 100%;
+            font-size: 18px;
+            margin-top: 5px;
+            border: 2px solid #b9b9b9;
+            border-radius: 3px;
+            padding: 5px 10px;
+            color: #282828;
+
+            &:focus {
+                outline: none;
+            }
+        }
+    }
+}
