@@ -263,28 +263,29 @@ body {
   padding: 10px 15px;
 }
 
-.main__create-project button {
+.main__submit {
   margin-top: 50px;
   width: 100%;
   font-size: 18px;
   font-weight: 500;
   padding: 10px 70px;
   border-radius: 5px;
+  background-color: #3A8BBB;
   color: #ffffff;
   border: none;
   -webkit-transition: all .2s ease;
   transition: all .2s ease;
 }
 
-.main__create-project button:active {
+.main__submit:active {
   letter-spacing: 0.5px;
 }
 
-.main__create-project button:focus {
+.main__submit:focus {
   outline: none;
 }
 
-.main__create-project button:hover {
+.main__submit:hover {
   cursor: pointer;
   background-color: #44a7e0;
 }

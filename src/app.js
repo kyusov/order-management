@@ -63,7 +63,7 @@ app.get('/main', authentication(), (req, res) => {
     })
 })
 
-function getCOlor() {
+function getColor() {
   return '#' + (Math.random().toString(16) + "000000").substring(2, 8)
 }
 

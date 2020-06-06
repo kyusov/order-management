@@ -1,6 +1,7 @@
 @import "_body";
 @import "_header";
 @import "_projects";
+@import "_design";
 
 .main {
     &__wrapper {
@@ -82,31 +83,31 @@
 
     &__create-project {
         padding: 10px 15px;
+    }
 
+    &__submit {
+        margin-top: 50px;
+        width: 100%;
+        font-size: 18px;
+        font-weight: 500;
+        padding: 10px 70px;
+        border-radius: 5px;
+        background-color: $color-button-accent;
+        color: #ffffff;
+        border: none;
+        transition: all .2s ease;
 
-        button {
-            margin-top: 50px;
-            width: 100%;
-            font-size: 18px;
-            font-weight: 500;
-            padding: 10px 70px;
-            border-radius: 5px;
-            color: #ffffff;
-            border: none;
-            transition: all .2s ease;
+        &:active {
+            letter-spacing: 0.5px;
+        }
 
-            &:active {
-                letter-spacing: 0.5px;
-            }
+        &:focus {
+            outline: none;
+        }
 
-            &:focus {
-                outline: none;
-            }
-
-            &:hover {
-                cursor: pointer;
-                background-color: #44a7e0;
-            }
+        &:hover {
+            cursor: pointer;
+            background-color: $color-button-hover;
         }
     }
 

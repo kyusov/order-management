@@ -6,8 +6,10 @@ html
     link(rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500&display=swap")
     style
       include ../public/css/main.css
+    script(src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js")
+    script
+        include ../public/js/main.js
     body
-      script(src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js")
       include ./header
       include ./projects
       .main__modal(data-modal="1")
@@ -17,9 +19,12 @@ html
         form.main__create-project(name="create_project" method="POST" action="/createProject")
           .main__title-project
             p Название проекта
-            input(type="text" placeholder="Название проекта" name="title")
+            input(type="text" placeholder="Название проекта" name="title" required)
           .main__title-project
-            p Примерная дата окончания
-            input(type="date" name="date")
+            p Дата начала
+            input(type="datetime-local" id="projectStartTime" name="dateStart" required)
+          .main__title-project
+            p Дата окончания
+            input(type="datetime-local" id="projectEndTime" name="dateEnd" required)
           button.main__submit(type="submit") Создать
-        .main__overlay
+      .main__overlay
