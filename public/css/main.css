@@ -97,7 +97,6 @@ body {
 
 .project__wrapper {
   width: 30%;
-  padding: 20px 0 0 50px;
 }
 
 .project__title {
@@ -182,6 +181,31 @@ body {
   font-weight: 500;
   color: #282828;
   margin-left: 10px;
+}
+
+.tasks__wrapper {
+  display: none;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+      -ms-flex-direction: column;
+          flex-direction: column;
+  width: 70%;
+  padding: 0 30px;
+}
+
+.tasks__title {
+  text-align: left;
+  font-size: 24px;
+  font-weight: 500;
+  padding-bottom: 20px;
+}
+
+.tasks__table input {
+  padding: 5px 2px;
+}
+
+.tasks__table select {
+  padding: 5px 2px;
 }
 
 .main__wrapper {

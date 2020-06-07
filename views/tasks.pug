@@ -1,0 +1,35 @@
+.tasks__wrapper
+    .tasks__title
+    .tasks__table
+        table.tasks__table
+            thead
+                tr
+                    th Название
+                    th Описание
+                    th Время начала
+                    th Время окончания
+                    th Тип задачи
+                    th Исполнитель
+                    th Управление
+            tbody
+                tr
+                    td
+                        input(type="text")
+                    td
+                        input(type="text")
+                    td
+                        input(type="datetime-local")
+                    td
+                        input(type="datetime-local")
+                    td
+                        select
+                            option(value="", disabled, selected, hidden) Выберите услугу
+                            each e in tasks_type
+                                option(value=`${e.id}`) #{e.name}
+                    td
+                        select.worker
+                            option(value="", disabled, selected, hidden) Выберите исполнителя
+                                each e in workers
+                                    option(value=`${e.id}`) #{e.f + ' ' + e.l}
+                    td
+                        button.add Добавить

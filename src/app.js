@@ -15,6 +15,8 @@ const pool = mysql.createPool({
   password: '',
 })
 
+const pug = require('pug')
+
 app.use(express.static('./public'))
 app.set('views', './views')
 app.set('view engine', 'pug')
@@ -46,8 +48,10 @@ app.post(
 app.get('/main', authentication(), (req, res) => {
   const profession = query(`SELECT name as profession FROM profession WHERE id = ${session.prof_id}`)
   const projects = query(`SELECT * FROM projects`)
+  const tasks_type = query(`SELECT * FROM task_type`)
+  const workers = query(`SELECT id, first_name as f, last_name as l FROM users WHERE prof_id <> 4`)
 
-  Promise.all([projects, profession])
+  Promise.all([projects, profession, tasks_type, workers])
     .then(results => {
       const profession = results[1][0].profession
       const progress = results[0].filter(e => e.status === 0)
@@ -58,8 +62,23 @@ app.get('/main', authentication(), (req, res) => {
         profession,
         ready,
         progress,
-        isAdmin: session.prof_id === 4 ? true : false
+        isAdmin: session.prof_id === 4 ? true : false,
+        workers: results[3],
+        tasks_type: results[2]
       })
+    })
+})
+
+app.post('/info', (req, res) => {
+  query(`SELECT * FROM tasks WHERE project_id = ${req.body.id}`)
+    .then(result => {
+      res.json({
+
+      })
+    })
+    .catch(err => {
+      res.json(err)
+      console.log(err)
     })
 })
 

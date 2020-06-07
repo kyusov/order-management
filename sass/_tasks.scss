@@ -1,0 +1,27 @@
+@import "_design";
+
+.tasks {
+    &__wrapper {
+        display: none;
+        flex-direction: column;
+        width: 70%;
+        padding: 0 30px;
+    }
+
+    &__title {
+        text-align: left;
+        font-size: $font-size-large;
+        font-weight: 500;
+        padding-bottom: 20px;
+    }
+
+    &__table {
+        input {
+            padding: 5px 2px;
+        }
+
+        select {
+            padding: 5px 2px;
+        }
+    }
+}

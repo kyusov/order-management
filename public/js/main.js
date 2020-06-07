@@ -2,8 +2,42 @@ $(document).ready(function () {
     // кнопка создания проекта
     const $createProject = $('.project__create')
     // инпуты времени проекта
-    const $projectStartTime = $('#projectStartTime')
-    const $projectEndTime = $('#projectEndTime')
+    // const $projectStartTime = $('#projectStartTime')
+    // const $projectEndTime = $('#projectEndTime')
+
+    // установка обработчика для всех элементов списков
+    $('.project__item').on('click', function (event) {
+        let $item
+        $('.project__item.active').removeClass('active')
+        $('.tasks__wrapper').css('display', 'flex')
+
+        if (event.target.tagName !== 'LI') {
+            $item = $($(event).get(0).currentTarget).addClass('active')
+            $('.tasks_title').text()
+        } else {
+            $item = $(event.target).addClass('active')
+        }
+
+        $('.add').attr('data-id', $item.attr('data-id'))
+        const title = $item.children('.project__name').text()
+        $('.tasks__title').text(title)
+
+        $.ajax({
+            type: 'POST',
+            url: '/info',
+            data: {
+                id: $item.attr('data-id')
+            }
+        }).done(msg => {
+            console.log(msg)
+        }).fail(err => {
+            console.log(err)
+        })
+    })
+
+    function showTasks(data) {
+
+    }
 
     // установка минимального значения времени
     // let date = new Date()

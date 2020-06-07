@@ -8,23 +8,26 @@ html
       include ../public/css/main.css
     script(src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js")
     script
-        include ../public/js/main.js
+      include ../public/js/main.js
     body
+
       include ./header
-      include ./projects
-      .main__modal(data-modal="1")
-        svg.main__cross.js-modal-close(xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24")
-          path(d="M23.954 21.03l-9.184-9.095 9.092-9.174-2.832-2.807-9.09 9.179-9.176-9.088-2.81 2.81 9.186 9.105-9.095 9.184 2.81 2.81 9.112-9.192 9.18 9.1z")
-        .main__title Создание проекта
-        form.main__create-project(name="create_project" method="POST" action="/createProject")
-          .main__title-project
-            p Название проекта
-            input(type="text" placeholder="Название проекта" name="title" required)
-          .main__title-project
-            p Дата начала
-            input(type="datetime-local" id="projectStartTime" name="dateStart" required)
-          .main__title-project
-            p Дата окончания
-            input(type="datetime-local" id="projectEndTime" name="dateEnd" required)
-          button.main__submit(type="submit") Создать
-      .main__overlay
+      .main__wrapper
+        include ./projects
+        include ./tasks
+        .main__modal(data-modal="1")
+          svg.main__cross.js-modal-close(xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24")
+            path(d="M23.954 21.03l-9.184-9.095 9.092-9.174-2.832-2.807-9.09 9.179-9.176-9.088-2.81 2.81 9.186 9.105-9.095 9.184 2.81 2.81 9.112-9.192 9.18 9.1z")
+          .main__title Создание проекта
+          form.main__create-project(name="create_project" method="POST" action="/createProject")
+            .main__title-project
+              p Название проекта
+              input(type="text" placeholder="Название проекта" name="title" required)
+            .main__title-project
+              p Дата начала
+              input(type="datetime-local" id="projectStartTime" name="dateStart" required)
+            .main__title-project
+              p Дата окончания
+              input(type="datetime-local" id="projectEndTime" name="dateEnd" required)
+            button.main__submit(type="submit") Создать
+        .main__overlay
