@@ -1,0 +1,30 @@
+@import "_header";
+@import "_body";
+@import "_projects";
+@import "_tasks";
+@import "_design";
+
+.user {
+    &__wrapper {
+        color: #282828;
+        padding: 10px 5px 0 10px;
+        display: flex;
+    }
+}
+
+.del {
+    padding: 5px 10px;
+    border: none;
+    color: white;
+    font-size: 16px;
+    font-weight: 500;
+    background-color: #40d42cc7;
+    border-radius: 2px;
+
+    outline: none;
+
+    &:hover {
+        background-color: #40d42c;
+        cursor: pointer;
+    }
+}

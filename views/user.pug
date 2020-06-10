@@ -1,0 +1,16 @@
+doctype html
+html
+    head
+        meta(charset = 'utf-8' lang="ru")
+        title User Page
+        link(rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500&display=swap")
+        style
+            include ../public/css/user.css
+        script(src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js")
+        script
+            include ../public/js/user.js
+    body
+        include ./header
+        .user__wrapper
+            include ./projects
+            include ./tasks

@@ -46,27 +46,57 @@ app.post(
 )
 
 app.get('/main', authentication(), (req, res) => {
-  const profession = query(`SELECT name as profession FROM profession WHERE id = ${session.prof_id}`)
-  const projects = query(`SELECT * FROM projects`)
-  const tasks_type = query(`SELECT * FROM task_type`)
-  const workers = query(`SELECT id, first_name as f, last_name as l FROM users WHERE prof_id <> 4`)
 
-  Promise.all([projects, profession, tasks_type, workers])
-    .then(results => {
-      const profession = results[1][0].profession
-      const progress = results[0].filter(e => e.status === 0)
-      const ready = results[0].filter(e => e.status === 1)
-      res.render('main', {
-        first_name: session.fname,
-        last_name: session.lname,
-        profession,
-        ready,
-        progress,
-        isAdmin: session.prof_id === 4 ? true : false,
-        workers: results[3],
-        tasks_type: results[2]
+  if (session.prof_id === 4) {
+    const profession = query(`SELECT name as profession FROM profession WHERE id = ${session.prof_id}`)
+    const projects = query(`SELECT * FROM projects`)
+    const tasks_type = query(`SELECT * FROM task_type`)
+    const workers = query(`SELECT id, first_name as f, last_name as l FROM users WHERE prof_id <> 4`)
+
+    Promise.all([projects, profession, tasks_type, workers])
+      .then(results => {
+        const profession = results[1][0].profession
+        const progress = results[0].filter(e => e.status === 0)
+        const ready = results[0].filter(e => e.status === 1)
+        res.render('main', {
+          first_name: session.fname,
+          last_name: session.lname,
+          profession,
+          ready,
+          progress,
+          isAdmin: session.prof_id === 4 ? true : false,
+          workers: results[3],
+          tasks_type: results[2]
+        })
       })
-    })
+  } else {
+    const projects = query(`SELECT * FROM projects`)
+    const worker = query(`
+    SELECT users.id, first_name as f, last_name as l, name FROM users
+    INNER JOIN profession ON prof_id = profession.id
+    WHERE prof_id = ${session.prof_id} and users.id = ${session.id}
+    `)
+
+    Promise.all([projects, worker])
+      .then(results => {
+        const progress = results[0].filter(e => e.status === 0)
+        const ready = results[0].filter(e => e.status === 1)
+
+        res.render('user', {
+
+          first_name: session.fname,
+          last_name: session.lname,
+          profession: results[1][0].name,
+          ready,
+          progress,
+          tasks_type: [],
+          workers: []
+        })
+      })
+      .catch(err => {
+        console.log(err)
+      })
+  }
 })
 
 app.post('/info', (req, res) => {
@@ -101,7 +131,6 @@ app.post('/deleteTask', (req, res) => {
 })
 
 app.post('/addTask', (req, res) => {
-  console.log(req.body)
   query(`INSERT INTO tasks (title, time_start, time_end, type_id, status, project_id, user_id)
   VALUES ('${req.body.title}', '${req.body.timeStart}',
   '${req.body.timeEnd}', ${req.body.task_type}, 0,
@@ -143,313 +172,36 @@ app.post('/closeProject', (req, res) => {
     })
 })
 
+app.post('/userInfo', (req, res) => {
+  query(`
+  SELECT tasks.id, tasks.title, description, tasks.time_start, tasks.time_end,
+  tasks.status, first_name, last_name, name
+  FROM tasks
+  INNER JOIN users ON tasks.user_id = users.id
+  INNER JOIN task_type ON tasks.type_id = task_type.id
+  WHERE project_id = ${req.body.project_id} AND users.id = ${session.id}`)
+    .then(result => {
+      res.json({
+        project_id: req.body.project_id,
+        progress: result.filter(e => e.status === 0),
+        ready: result.filter(e => e.status === 1)
+      })
+    })
+    .catch(err => {
+      console.log(err)
+    })
+})
 
-// const express = require("express");
-// const app = express();
-// const passport = require("passport");
-// const LocalStrategy = require("passport-local").Strategy;
-// const mysql = require("mysql");
-// const session = require("express-session");
-// // const routes = require('./routes')
-// const pool = mysql.createPool({
-//   connectionLimit: 5,
-//   host: "localhost",
-//   user: "root",
-//   database: "project",
-//   password: "",
-// });
-
-// //middleware
-// app.use(express.static("./public"));
-// app.set("views", "./views");
-// app.set("view engine", "pug");
-// app.use(express.json());
-// app.use(express.urlencoded({
-//   extended: false
-// }));
-
-// app.use(session({
-//   secret: "banana juice"
-// }));
-// app.use(passport.initialize());
-// app.use(passport.session());
-
-// app.get("/", (req, res) => {
-//   res.render("auth");
-// });
-
-// app.post(
-//   "/auth",
-//   passport.authenticate("local", {
-//     successRedirect: "/main",
-//     failureRedirect: "/",
-//   })
-// );
-
-// app.get("/main", authentication(), (req, res) => {
-
-//   query(`SELECT prof_id FROM \`prof-user\` WHERE user_id = ${session.id}`)
-//     .then(user => {
-//       if (user[0].prof_id === 4) {
-//         const projects = query(`SELECT title, status, pic FROM projects`)
-//         const types = query(`SELECT type FROM \`tasks-type\``)
-//         const employees = query(`
-//       SELECT first_name, last_name 
-//       FROM users INNER JOIN \`prof-user\`  
-//       ON \`prof-user\`.prof_id <> 4 and users.id = \`prof-user\`.user_id`)
-//         const user = query(`SELECT first_name, last_name FROM users WHERE id = ${session.id}`)
-
-//         const test = Promise.all([projects, types, employees, user])
-
-//         test.then(result => {
-//           const progress = result[0].filter(e => e.status === 0)
-//           const ready = result[0].filter(e => e.status === 1)
-//           const taskTypes = result[1].map(e => e.type)
-//           const employees = result[2].map(e => `${e.first_name} ${e.last_name}`)
-
-//           res.render('main', {
-//             progress,
-//             ready,
-//             tasks_type: taskTypes,
-//             employees,
-//             last_name: result[3][0].last_name,
-//             first_name: result[3][0].first_name,
-//             admin: 1
-//           })
-//         }).catch(err => {
-//           console.log('Error', err.msg)
-//           res.json({
-//             status: '500',
-//             msg: 'Ошибка БД'
-//           })
-//         })
-//       } else {
-//         query(`SELECT prof_id FROM \`prof-user\` WHERE user_id = ${session.id}`)
-//           .then(result1 => {
-//             query(`SELECT name FROM professions WHERE id = ${result1[0].prof_id}`)
-//               .then(result2 => {
-//                 query(`SELECT title, status, pic FROM projects`)
-//                   .then(result3 => {
-//                     console.log(result3)
-//                     const progress = result3.filter(e => e.status === 0)
-//                     const ready = result3.filter(e => e.status === 1)
-
-//                     res.render('main', {
-//                       first_name: session.fname,
-//                       last_name: session.lname,
-//                       profession: result2[0].name,
-//                       ready,
-//                       progress,
-//                       admin: 0
-//                     })
-//                   })
-//               }).catch(err => console.log(err))
-//           })
-//           .catch(err => {
-//             console.log(err)
-//           })
-//         // const user = query(`SELECT id, first_name, last_name FROM users WHERE id = ${session.id}`)
-//         // .then(result => {
-
-//         //   // query(`SELECT task_id FROM \`tasks-executors\` WHERE user_id = ${result[0].id}`)
-//         //   // .then(result1 => {
-//         //   //   const data = {
-//         //   //     first_name: result[0].first_name,
-//         //   //     last_name: result[0].last_name,
-//         //   //     tasks: result1.map(e => e.task_id)
-//         //   //   }
-//         //   //   // profession send
-//         //   // })
-//         // }).catch(err => {
-//         //   console.log(err)
-//         // })
-//       }
-//     })
-//     .catch(err => {
-//       console.log(err)
-//     })
-// })
-
-// app.post('/createProject', (req, res) => {
-
-//   const title = req.body['title']
-//   const dateEnd = req.body['date']
-//   const pic = req.body['pic']
-
-//   console.log(dateEnd)
-
-//   const dn = new Date()
-//   const dateNow = `${dn.getFullYear()}-${dn.getMonth() + 1}-${dn.getDate()}`
-
-//   query(`
-//   INSERT INTO projects (title, time_start, time_end, pic)
-//   VALUES ('${ title}', '${dateNow}', '${dateEnd}', '${pic}')
-//   `)
-//     .then(result => {
-//       res.json({
-//         status: '200'
-//       })
-//     })
-//     .catch(err => {
-//       res.json({
-//         status: '500'
-//       })
-//     })
-// })
-
-// app.post('/infoProject', (req, res) => {
-//   const title = req.body.title
-
-//   const tasksInfo = query(`SELECT id, title, time_expected FROM tasks
-//   WHERE project_id = (
-//     SELECT id FROM projects
-//     WHERE title = '${title}'
-//     ) and status = 0`)
-//   tasksInfo
-//     .then(task => {
-//       if (task.length !== 0) {
-//         const task_user = query(`SELECT user_id, task_id FROM \`tasks-executors\``).then(task_ids => {
-
-//           const users = query(`SELECT id, first_name, last_name FROM users WHERE id = ${task_ids.map(e => e.user_id).join(' or id = ')}`).then(result => {
-//             const userInfo = []
-//             for (let i = 0; i < task_ids.length; i++) {
-//               for (let j = 0; j < result.length; j++) {
-//                 if (task_ids[i].user_id === result[j].id) {
-//                   const obj = {
-//                     fn: result[j].first_name,
-//                     ln: result[j].last_name,
-//                     task_id: task_ids[i].task_id
-//                   }
-//                   userInfo.push(obj)
-//                 }
-//               }
-//             }
-
-//             const data = []
-//             for (let i = 0; i < task.length; i++) {
-//               if (task[i].id = userInfo[i].task_id) {
-//                 const obj = {
-//                   id: task[i].id,
-//                   title: task[i].title,
-//                   name: `${userInfo[i].fn} ${userInfo[i].ln}`,
-//                   timeEnd: new Date(Date.parse(task[i].time_expected)).toLocaleDateString('ru-RU', {
-//                     year: 'numeric',
-//                     month: '2-digit',
-//                     day: '2-digit'
-//                   })
-//                 }
-//                 data.push(obj)
-//               }
-//             }
-
-//             res.json({
-//               tasks: data
-//             })
-//           }).catch(err => {
-//             console.log(err)
-//           })
-//         }).catch(err => console.log(err))
-//       } else {
-//         res.json({
-//           tasks: task
-//         })
-//       }
-
-//     })
-//     .catch(err => {
-//       console.log(err)
-//       res.json({
-//         msg: 'Error',
-//         status: '500',
-//         err
-//       })
-//     })
-// })
-
-// app.post('/addTask', (req, res) => {
-//   const dn = new Date()
-//   const dateNow = `${dn.getFullYear()}-${dn.getMonth() + 1}-${dn.getDate()}`
-
-//   const titleTask = req.body.title
-//   const titleProject = req.body.projectTitle
-//   const employer = req.body.employer.split(' ')
-//   const timeEnd = req.body.time
-
-//   const task_type = query(`SELECT id FROM \`tasks-type\` WHERE type = '${titleTask}'`)
-//   const project_id = query(`SELECT id FROM projects WHERE title = '${titleProject}'`)
-
-//   Promise.all([task_type, project_id]).then(result => {
-//     const insertTask = query(`INSERT INTO tasks (title, time_start, time_expected, type_id, status, project_id) VALUES
-//     ('${titleTask}','${dateNow}', '${timeEnd}', '${result[0][0].id}', 0, ${result[1][0].id})`).then(o => {
-//       const executor = query(`SELECT id FROM users WHERE first_name = '${employer[0]}' and last_name = '${employer[1]}'`)
-//       const test = query(`SELECT MAX(id) as id FROM tasks WHERE project_id = ${result[1][0].id}`)
-
-//       Promise.all([insertTask, executor, test]).then(result => {
-//         query(`INSERT INTO \`tasks-executors\` (task_id, user_id) VALUES (${[...result[2]][0].id}, ${result[1][0].id})`).then(r => {
-//           query(`SELECT task_id FROM \`tasks-executors\` order by id desc LIMIT 1 `).then(result => {
-//             res.json({
-//               id: result[0].task_id
-//             })
-//           })
-//         }).catch(err => console.log(err))
-//       }).catch(err => {
-//         console.log(err)
-//       })
-//     })
-//   }).catch(err => {
-//     console.log(err)
-//   })
-// })
-
-// app.post('/deleteTask', (req, res) => {
-//   const taskId = req.body.id
-//   const deleteTask = query(`DELETE FROM tasks WHERE id = ${taskId}`)
-//   const deleteExecutors = query(`DELETE FROM \`tasks-executors\` WHERE task_id = ${taskId}`)
-
-//   Promise.all([deleteTask, deleteExecutors]).then(result => {
-//     res.json({ status: 'ok' })
-//   }).catch(err => {
-//     res.json({ msg: 'Error', err })
-//   })
-// })
-
-// app.post('/deleteProject', (req, res) => {
-
-// })
-
-// app.post('/userProjectInfo', (req, res) => {
-//   query(`SELECT task_id FROM \`tasks-executors\` WHERE user_id = ${session.id}`)
-//     .then(tasks => {
-//       query(`SELECT id FROM projects WHERE title = '${req.body.title}'`)
-//         .then(project_id => {
-//           const ids = tasks.map(e => e.task_id).join(' or id = ')
-//           query(`SELECT id, title, time_expected as time, type_id as type, status, project_id FROM tasks WHERE id = ${ids}`).then(task => {
-//             const taskData = task.filter(e => e.project_id === project_id[0].id)
-//             const data = []
-
-//             for (let i = 0; i < taskData.length; i++) {
-//               const obj = {
-//                 id: taskData[i].id,
-//                 title: taskData[i].title,
-//                 timeEnd: new Date(Date.parse(taskData[i].time)).toLocaleDateString('ru-RU', {
-//                   year: 'numeric',
-//                   month: '2-digit',
-//                   day: '2-digit'
-//                 })
-//               }
-//               data.push(obj)
-//             }
-
-//             res.json(data)
-
-//           })
-//         })
-//         .catch(err => {
-//           console.log(err)
-//         })
-//     })
-//     .catch(err => console.log(err))
-// })
+app.post('/closeTask', (req, res) => {
+  query(`UPDATE tasks 
+  SET status = 1 WHERE id = ${req.body.task_id}`)
+    .then(result => {
+      res.json('ok')
+    })
+    .catch(err => {
+      console.log(err)
+    })
+})
 
 /**
  * input
