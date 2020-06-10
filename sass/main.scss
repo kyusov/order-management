@@ -6,7 +6,7 @@
 
 .main {
     &__wrapper {
-        padding: 30px 50px 0 50px;
+        padding: 30px 20px 0 20px;
         display: flex;
         color: #282828;
     }
@@ -35,6 +35,11 @@
         border-radius: 3px;
         background-color: #fff;
         transition: 0.3s all;
+
+        &.active {
+            opacity: 1;
+            visibility: visible;
+        }
     }
 
     &__overlay {
@@ -49,16 +54,7 @@
         background-color: rgba(0, 0, 0, 0.5);
         z-index: 2;
         transition: 0.3s all;
-    }
 
-    &__modal {
-        &.active {
-            opacity: 1;
-            visibility: visible;
-        }
-    }
-
-    &__overlay {
         &.active {
             opacity: 1;
             visibility: visible;
@@ -137,5 +133,58 @@
                 outline: none;
             }
         }
+    }
+}
+
+.add {
+    padding: 5px 10px;
+    border: none;
+    color: white;
+    font-size: 16px;
+    font-weight: 500;
+    background-color: $color-button-accent;
+    border-radius: 2px;
+
+    outline: none;
+
+    &:hover {
+        background-color: $color-button-hover;
+        cursor: pointer;
+    }
+}
+
+.del {
+    padding: 5px 10px;
+    border: none;
+    color: white;
+    font-size: 16px;
+    font-weight: 500;
+    background-color: #d42c2cc7;
+    border-radius: 2px;
+
+    outline: none;
+
+    &:hover {
+        background-color: #d42c2c;
+        cursor: pointer;
+    }
+}
+
+.closeProject {
+    padding: 5px 10px;
+    border: none;
+    color: white;
+    font-size: 16px;
+    font-weight: 500;
+    background-color: #d42c2cc7;
+    border-radius: 2px;
+    margin-left: 25px;
+    height: 29px;
+
+    outline: none;
+
+    &:hover {
+        background-color: #d42c2c;
+        cursor: pointer;
     }
 }

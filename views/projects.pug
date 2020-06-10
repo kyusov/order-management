@@ -5,12 +5,12 @@
         .project__progress Выполняемые проекты
             ul.project__list
                 each e in progress
-                    li.project__item(data-id=`${e.id}`)
+                    li.project__item(data-id=`${e.id}`, data-status=`${e.status}`)
                         .project__pic(style=`background-color:${e.pic};`)
                         .project__name #{e.title}
         .project__ready.grey Выполненные проекты
             ul.project__list
                 each e in ready
-                    li.project__item(data-id=`${e.id}`)
+                    li.project__item(data-id=`${e.id}`, data-status=`${e.status}`)
                         .project__pic(style=`background-color:${e.pic};`)
                         .project__name #{e.title}

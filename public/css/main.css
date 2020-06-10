@@ -189,27 +189,188 @@ body {
   -webkit-box-direction: normal;
       -ms-flex-direction: column;
           flex-direction: column;
-  width: 70%;
-  padding: 0 30px;
+  width: 100%;
+  padding: 0 5px;
 }
 
 .tasks__title {
-  text-align: left;
   font-size: 24px;
   font-weight: 500;
   padding-bottom: 20px;
 }
 
-.tasks__table input {
+.tasks__control td {
+  padding-bottom: 10px;
+}
+
+.tasks__table {
+  font-weight: 400;
+  width: 100%;
+}
+
+.tasks__table tbody {
+  text-align: center;
+}
+
+.tasks__table tbody td {
+  padding: 10px 5px;
+  font-size: 14px;
+  min-width: 150px;
+}
+
+.tasks__title-ready {
+  padding: 30px 0 10px 0;
+}
+
+.tasks__table-ready {
+  width: 100%;
+  text-align: center;
+}
+
+.tasks__table-ready tbody td {
+  min-width: 150px;
+  font-size: 14px;
   padding: 5px 2px;
 }
 
-.tasks__table select {
-  padding: 5px 2px;
+.tasks__modal {
+  /* Скрываем окна  */
+  opacity: 0;
+  visibility: hidden;
+  /*  Установаем ширину окна  */
+  width: 100%;
+  max-width: 500px;
+  /*  Центрируем и задаем z-index */
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  -webkit-transform: translate(-50%, -50%);
+          transform: translate(-50%, -50%);
+  z-index: 3;
+  /* Должен быть выше чем у подложки*/
+  /*  Побочные стили   */
+  -webkit-box-shadow: 0 3px 10px -0.5px rgba(0, 0, 0, 0.2);
+          box-shadow: 0 3px 10px -0.5px rgba(0, 0, 0, 0.2);
+  text-align: center;
+  padding: 10px;
+  border-radius: 3px;
+  background-color: #fff;
+  -webkit-transition: 0.3s all;
+  transition: 0.3s all;
+}
+
+.tasks__modal.active {
+  opacity: 1;
+  visibility: visible;
+}
+
+.tasks__overlay {
+  opacity: 0;
+  visibility: hidden;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  z-index: 2;
+  -webkit-transition: 0.3s all;
+  transition: 0.3s all;
+}
+
+.tasks__overlay.active {
+  opacity: 1;
+  visibility: visible;
+}
+
+.tasks__cross {
+  width: 15px;
+  height: 15px;
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  fill: #444;
+  cursor: pointer;
+}
+
+.tasks__title-project {
+  font-size: 18px;
+  font-weight: 500;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+      -ms-flex-direction: column;
+          flex-direction: column;
+  -webkit-box-align: start;
+      -ms-flex-align: start;
+          align-items: flex-start;
+  margin-top: 15px;
+}
+
+.tasks__title-project:first-child {
+  margin: 0;
+}
+
+.tasks__title-project input {
+  width: 100%;
+  font-size: 18px;
+  margin-top: 5px;
+  border: 2px solid #b9b9b9;
+  border-radius: 3px;
+  padding: 5px 10px;
+  color: #282828;
+}
+
+.tasks__title-project input:focus {
+  outline: none;
+}
+
+.tasks__title-project select {
+  border: 2px solid #b9b9b9;
+  padding: 10px 5px;
+  width: 100%;
+}
+
+.tasks__submit {
+  margin-top: 50px;
+  width: 100%;
+  font-size: 18px;
+  font-weight: 500;
+  padding: 10px 70px;
+  border-radius: 5px;
+  background-color: #3A8BBB;
+  color: #ffffff;
+  border: none;
+  -webkit-transition: all .2s ease;
+  transition: all .2s ease;
+}
+
+.tasks__submit:active {
+  letter-spacing: 0.5px;
+}
+
+.tasks__submit:focus {
+  outline: none;
+}
+
+.tasks__submit:hover {
+  cursor: pointer;
+  background-color: #44a7e0;
+}
+
+.tasks__container {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-pack: justify;
+      -ms-flex-pack: justify;
+          justify-content: space-between;
 }
 
 .main__wrapper {
-  padding: 30px 50px 0 50px;
+  padding: 30px 20px 0 20px;
   display: -webkit-box;
   display: -ms-flexbox;
   display: flex;
@@ -242,6 +403,11 @@ body {
   transition: 0.3s all;
 }
 
+.main__modal.active {
+  opacity: 1;
+  visibility: visible;
+}
+
 .main__overlay {
   opacity: 0;
   visibility: hidden;
@@ -254,11 +420,6 @@ body {
   z-index: 2;
   -webkit-transition: 0.3s all;
   transition: 0.3s all;
-}
-
-.main__modal.active {
-  opacity: 1;
-  visibility: visible;
 }
 
 .main__overlay.active {
@@ -346,4 +507,54 @@ body {
 
 .main__title-project input:focus {
   outline: none;
+}
+
+.add {
+  padding: 5px 10px;
+  border: none;
+  color: white;
+  font-size: 16px;
+  font-weight: 500;
+  background-color: #3A8BBB;
+  border-radius: 2px;
+  outline: none;
+}
+
+.add:hover {
+  background-color: #44a7e0;
+  cursor: pointer;
+}
+
+.del {
+  padding: 5px 10px;
+  border: none;
+  color: white;
+  font-size: 16px;
+  font-weight: 500;
+  background-color: #d42c2cc7;
+  border-radius: 2px;
+  outline: none;
+}
+
+.del:hover {
+  background-color: #d42c2c;
+  cursor: pointer;
+}
+
+.closeProject {
+  padding: 5px 10px;
+  border: none;
+  color: white;
+  font-size: 16px;
+  font-weight: 500;
+  background-color: #d42c2cc7;
+  border-radius: 2px;
+  margin-left: 25px;
+  height: 29px;
+  outline: none;
+}
+
+.closeProject:hover {
+  background-color: #d42c2c;
+  cursor: pointer;
 }

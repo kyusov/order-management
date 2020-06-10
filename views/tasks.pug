@@ -1,35 +1,69 @@
 .tasks__wrapper
-    .tasks__title
-    .tasks__table
+    .tasks__container
+        .tasks__title
+        button.closeProject Завершить
+    .tasks__tables
         table.tasks__table
             thead
                 tr
                     th Название
-                    th Описание
+                    //- th Описание
                     th Время начала
                     th Время окончания
                     th Тип задачи
                     th Исполнитель
                     th Управление
             tbody
-                tr
-                    td
-                        input(type="text")
-                    td
-                        input(type="text")
-                    td
-                        input(type="datetime-local")
-                    td
-                        input(type="datetime-local")
-                    td
-                        select
-                            option(value="", disabled, selected, hidden) Выберите услугу
-                            each e in tasks_type
-                                option(value=`${e.id}`) #{e.name}
-                    td
-                        select.worker
-                            option(value="", disabled, selected, hidden) Выберите исполнителя
-                                each e in workers
-                                    option(value=`${e.id}`) #{e.f + ' ' + e.l}
-                    td
+                tr.tasks__control
+                    //- td
+                    //-     input(type="text")
+                    //- //- td
+                    //-     input(type="text")
+                    //- td
+                    //-     input(type="datetime-local")
+                    //- td
+                    //-     input(type="datetime-local")
+                    //- td
+                    //-     select
+                    //-         option(value="", disabled, selected, hidden) Выберите услугу
+                    //-         each e in tasks_type
+                    //-             option(value=`${e.id}`) #{e.name}
+                    //- td
+                    //-     select.worker
+                    //-         option(value="", disabled, selected, hidden) Выберите исполнителя
+                    //-             each e in workers
+                    //-                 option(value=`${e.id}`) #{e.f + ' ' + e.l}
+                    //- td
+                    td(colspan="6")
                         button.add Добавить
+        .tasks__title-ready Выполненные
+        table.tasks__table-ready
+            tbody
+    .tasks__modal(data-modal="1")
+        svg.tasks__cross.js-modal-close(xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24")
+            path(d="M23.954 21.03l-9.184-9.095 9.092-9.174-2.832-2.807-9.09 9.179-9.176-9.088-2.81 2.81 9.186 9.105-9.095 9.184 2.81 2.81 9.112-9.192 9.18 9.1z")
+        .tasks__title Создание проекта
+        form.tasks__create-project(name="create_project" method="POST" action="/addTask")
+            .tasks__title-project
+                p Название
+                input(type="text" name="title" required)
+            .tasks__title-project
+                p Дата начала
+                input(type="datetime-local" id="projectStartTime" name="timeStart" required)
+            .tasks__title-project
+                p Дата окончания
+                input(type="datetime-local" id="projectEndTime" name="timeEnd" required)
+            .tasks__title-project
+                p Тип задачи
+                select(name="task_type")
+                    option(value="", disabled, selected, hidden) Выберите услугу
+                    each e in tasks_type
+                        option(value=`${e.id}`) #{e.name}
+            .tasks__title-project
+                p Исполнитель
+                select(name="user").worker
+                    option(value="", disabled, selected, hidden) Выберите исполнителя
+                        each e in workers
+                            option(value=`${e.id}`) #{e.f + ' ' + e.l}
+            button.tasks__submit(type="submit") Добавить
+    .tasks__overlay

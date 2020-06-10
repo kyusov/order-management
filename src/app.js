@@ -70,10 +70,18 @@ app.get('/main', authentication(), (req, res) => {
 })
 
 app.post('/info', (req, res) => {
-  query(`SELECT * FROM tasks WHERE project_id = ${req.body.id}`)
+  query(`SELECT tasks.id, tasks.title, description, tasks.time_start, tasks.time_end,
+  tasks.status, first_name, last_name, name
+  FROM tasks
+  INNER JOIN users ON tasks.user_id = users.id
+  INNER JOIN task_type ON tasks.type_id = task_type.id
+  WHERE project_id = ${req.body.project_id}`)
     .then(result => {
+      console.log(result)
       res.json({
-
+        project_id: req.body.project_id,
+        progress: result.filter(e => e.status === 0),
+        ready: result.filter(e => e.status === 1)
       })
     })
     .catch(err => {
@@ -82,9 +90,58 @@ app.post('/info', (req, res) => {
     })
 })
 
-function getColor() {
-  return '#' + (Math.random().toString(16) + "000000").substring(2, 8)
-}
+app.post('/deleteTask', (req, res) => {
+  query(`DELETE FROM tasks WHERE id = ${req.body.task_id}`)
+    .then(result => {
+      res.json('ok')
+    })
+    .catch(err => {
+      console.log(err)
+    })
+})
+
+app.post('/addTask', (req, res) => {
+  console.log(req.body)
+  query(`INSERT INTO tasks (title, time_start, time_end, type_id, status, project_id, user_id)
+  VALUES ('${req.body.title}', '${req.body.timeStart}',
+  '${req.body.timeEnd}', ${req.body.task_type}, 0,
+  ${req.body.project_id}, ${req.body.user})`)
+    .then(result => {
+      res.json('ok')
+    })
+    .catch(err => {
+      console.log(err)
+    })
+})
+
+app.post('/addProject', (req, res) => {
+  query(`INSERT INTO projects (pic, title, time_start, time_end, status)
+  VALUES ('${req.body.pic}', '${req.body.title}', '${req.body.dateStart}', '${req.body.dateEnd}', 0)`)
+    .then(result => {
+      res.json('ok')
+    })
+    .catch(err => {
+      console.log(err)
+    })
+})
+
+app.post('/closeProject', (req, res) => {
+  query(`UPDATE tasks 
+  SET status = 1 WHERE project_id = ${req.body.project_id}`)
+    .then(result => {
+      query(`UPDATE projects 
+      SET status = 1 WHERE id = ${req.body.project_id}`)
+        .then(results => {
+          res.json('ok')
+        })
+        .catch(err => {
+          console.log(err)
+        })
+    })
+    .catch(err => {
+      console.log(err)
+    })
+})
 
 
 // const express = require("express");
