@@ -16,6 +16,71 @@ $(document).ready(function () {
     const $taskModal = $('.tasks__modal')
     const $taskOverlay = $('.tasks__overlay')
 
+    // модальное окно для статистики
+    // кнопка открытия статистики
+    const $statistic = $('.statistic')
+
+
+    // модальное окно статистики
+    const $statisticModal = $('.user__modal')
+    const $statisticOverlay = $('.user__overlay')
+    const $statisticCloseModal = $('.js-modal-close')
+
+    $statistic.on('click', function () {
+        $('.showStat').on('click', function (e) {
+            e.preventDefault()
+            const table = $(this).parent().serializeArray()
+
+            let data = {}
+
+            for (let i = 0; i < table.length; i++) {
+                data[table[i].name] = table[i].value
+            }
+
+            data.project_id = $('.project__item.active').attr('data-id')
+
+            $.ajax({
+                type: 'POST',
+                url: '/getAllTasksDate',
+                data
+            }).done(msg => {
+
+                console.log('tasks', msg)
+                const container = $('.user__form-container')
+                container.children().remove()
+                const $table = $('<table>')
+
+
+                for (let i = 0; i < msg.length; i++) {
+                    console.log()
+                    $table.append($('<tr>').append([
+                        $('<td>').text(msg[i].title),
+                        $('<td>').text(msg[i].first_name + ' ' + msg[i].last_name),
+                        $('<td>').text(msg[i].status === 0 ? 'Не начата' : msg[i].status === 1 ? 'Готово' : 'В работе')
+                    ]))
+                }
+                container.append($table)
+
+            }).fail(err => {
+                console.log(err)
+            })
+        })
+
+        $statisticModal.addClass('active')
+        $statisticOverlay.addClass('active')
+    })
+
+    $statisticCloseModal.on('click', e => {
+        e.preventDefault()
+        $statisticModal.removeClass('active')
+        $statisticOverlay.removeClass('active')
+    })
+
+    $statisticOverlay.on('click', () => {
+        $statisticModal.removeClass('active')
+        $statisticOverlay.removeClass('active')
+    })
+
     $closeProject.on('click', function (e) {
         e.preventDefault()
         $.ajax({
@@ -146,18 +211,18 @@ $(document).ready(function () {
                 project_id: $item.attr('data-id')
             }
         }).done(msg => {
-            console.log(msg)
+
             $('.tasks__table > tbody > tr.task-info').remove()
             $('.tasks__table-ready > tbody > tr.task-info').remove()
 
             showTasks(msg)
+
         }).fail(err => {
             console.log(err)
         })
     })
 
     function showTasks(data) {
-        console.log('data?', data)
 
         let $table = $('.tasks__table > tbody')
         if (data.length !== 0) {
@@ -167,8 +232,8 @@ $(document).ready(function () {
                         $('<tr>').append([
                             $('<td>').text(data.progress[i].title),
                             // $('<td>').text(data.progress[i].description),
-                            $('<td>').text(data.progress[i].time_start),
-                            $('<td>').text(data.progress[i].time_end),
+                            $('<td>').text(dateToString(data.progress[i].time_start)),
+                            $('<td>').text(dateToString(data.progress[i].time_end)),
                             $('<td>').text(data.progress[i].name),
                             $('<td>').text(data.progress[i].first_name + ' ' + data.progress[i].last_name),
                             $('<td>').append(
@@ -187,8 +252,8 @@ $(document).ready(function () {
                         $('<tr>').append([
                             $('<td>').text(data.ready[i].title),
                             // $('<td>').text(data.ready[i].description),
-                            $('<td>').text(data.ready[i].time_start),
-                            $('<td>').text(data.ready[i].time_end),
+                            $('<td>').text(dateToString(data.ready[i].time_start)),
+                            $('<td>').text(dateToString(data.ready[i].time_end)),
                             $('<td>').text(data.ready[i].name),
                             $('<td>').text(data.ready[i].first_name + ' ' + data.ready[i].last_name),
                             $('<td>').text('Выполнено')
@@ -242,6 +307,28 @@ $(document).ready(function () {
         // }
     }
 
+    // добавление значений в таблицу статистики
+    function showStatistic(data) {
+        const rows = []
+        console.log('data', data)
+        if (data.length !== 0) {
+            for (let i = 0; i < data.length; i++) {
+                rows.push(
+                    $('<tr>').append([
+                        $('<td>').text(data[i].first_name + ' ' + data[i].last_name),
+                        $('<td>').text(data[i].task_count),
+                        $('<td>').text(data[i].status_sum),
+                        $('<td>').text(data[i].task_count - data[i].status_sum)
+                    ])
+                )
+            }
+
+            return rows
+        }
+
+        return rows
+    }
+
     // установка минимального значения времени
     // let date = new Date()
     //     .toLocaleDateString('ru-RU', {
@@ -260,5 +347,14 @@ $(document).ready(function () {
 
     function getColor() {
         return '#' + (Math.random().toString(16) + "000000").substring(2, 8)
+    }
+
+    /**
+     * Принимает строку с датой в формате DD-MM-YYYYTHH:MM:SS.000Z
+     * @return {String} DD-MM-YYYY HH:MM
+     * @param {String} date 
+     */
+    function dateToString(date) {
+        return date.replace('T', ' ').substring(0, 16)
     }
 })

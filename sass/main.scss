@@ -136,6 +136,123 @@
     }
 }
 
+.user {
+    &__wrapper {
+        color: #282828;
+        padding: 10px 5px 0 10px;
+        display: flex;
+    }
+
+    &__modal {
+        /* Скрываем окна  */
+        opacity: 0;
+        visibility: hidden;
+
+        /*  Установаем ширину окна  */
+        width: 100%;
+        max-width: 700px;
+
+        /*  Центрируем и задаем z-index */
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        z-index: 3;
+        /* Должен быть выше чем у подложки*/
+
+        /*  Побочные стили   */
+        box-shadow: 0 3px 10px -0.5px rgba(0, 0, 0, 0.2);
+        text-align: center;
+        padding: 10px;
+        border-radius: 3px;
+        background-color: #fff;
+        transition: 0.3s all;
+
+        &.active {
+            opacity: 1;
+            visibility: visible;
+        }
+    }
+
+    &__overlay {
+        opacity: 0;
+        visibility: hidden;
+
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0, 0, 0, 0.5);
+        z-index: 2;
+        transition: 0.3s all;
+
+        &.active {
+            opacity: 1;
+            visibility: visible;
+        }
+    }
+
+    &__cross {
+        width: 15px;
+        height: 15px;
+        position: absolute;
+        top: 20px;
+        right: 20px;
+        fill: #444;
+        cursor: pointer;
+    }
+
+    &__title-project {
+        font-size: 18px;
+        font-weight: 500;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        margin-top: 15px;
+
+        &:first-child {
+            margin: 0;
+        }
+
+        input {
+
+            width: 50%;
+            padding: 5px 0;
+            font-size: 16px;
+        }
+    }
+
+    &__form-container {
+        >table {
+            width: 100%;
+            padding: 10px 0 0 0;
+            border-spacing: 0;
+            color: #282828;
+            font-size: 16px;
+            font-weight: 500;
+
+            tr {
+                width: 100%;
+                background-color: #b6b6b6;
+
+                &:nth-child(2n) {
+                    background-color: #eeeeee;
+                }
+            }
+
+            td {
+                width: 33%;
+                max-width: 335px;
+                padding: 10px 5px;
+                word-wrap: break-word;
+                text-align: left;
+                padding-left: 20px;
+            }
+        }
+    }
+}
+
 .add {
     padding: 5px 10px;
     border: none;
@@ -166,6 +283,43 @@
 
     &:hover {
         background-color: #d42c2c;
+        cursor: pointer;
+    }
+}
+
+.statistic {
+    padding: 5px 10px;
+    border: none;
+    color: white;
+    font-size: 16px;
+    font-weight: 500;
+    background-color: #c27c2c;
+    border-radius: 2px;
+    height: 29px;
+
+    outline: none;
+
+    &:hover {
+        background-color: #d48932;
+        cursor: pointer;
+    }
+}
+
+.showStat {
+    padding: 10px 10px;
+    margin-top: 15px;
+    width: 50%;
+    border: none;
+    color: white;
+    font-size: 16px;
+    font-weight: 500;
+    background-color: $color-button-accent;
+    border-radius: 2px;
+
+    outline: none;
+
+    &:hover {
+        background-color: $color-button-hover;
         cursor: pointer;
     }
 }

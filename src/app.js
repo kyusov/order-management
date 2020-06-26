@@ -15,6 +15,9 @@ const pool = mysql.createPool({
   password: '',
 })
 
+const moment = require('moment')
+moment.locale('ru')
+
 const pug = require('pug')
 
 app.use(express.static('./public'))
@@ -100,7 +103,7 @@ app.get('/main', authentication(), (req, res) => {
 })
 
 app.post('/info', (req, res) => {
-  query(`SELECT tasks.id, tasks.title, description, tasks.time_start, tasks.time_end,
+  query(`SELECT tasks.id, tasks.title, tasks.time_start, tasks.time_end,
   tasks.status, first_name, last_name, name
   FROM tasks
   INNER JOIN users ON tasks.user_id = users.id
@@ -110,7 +113,7 @@ app.post('/info', (req, res) => {
       console.log(result)
       res.json({
         project_id: req.body.project_id,
-        progress: result.filter(e => e.status === 0),
+        progress: result.filter(e => e.status === 0 || e.status === 2), // добавить статус 2 для отображения задач, которые находятся в статусе ожидание
         ready: result.filter(e => e.status === 1)
       })
     })
@@ -174,7 +177,7 @@ app.post('/closeProject', (req, res) => {
 
 app.post('/userInfo', (req, res) => {
   query(`
-  SELECT tasks.id, tasks.title, description, tasks.time_start, tasks.time_end,
+  SELECT tasks.id, tasks.title, tasks.time_start, tasks.time_end,
   tasks.status, first_name, last_name, name
   FROM tasks
   INNER JOIN users ON tasks.user_id = users.id
@@ -196,11 +199,106 @@ app.post('/closeTask', (req, res) => {
   query(`UPDATE tasks 
   SET status = 1 WHERE id = ${req.body.task_id}`)
     .then(result => {
-      res.json('ok')
+
+      query(`SELECT time_success FROM tasks WHERE id = ${req.body.task_id}`)
+        .then(results => {
+          let dateB = Date.parse(results[0].time_success) //moment()
+          let dateC = Date.now() //moment()
+          query(`UPDATE tasks 
+          SET time_success = '${formatDate(new Date(new Date - (dateC - dateB)))}' WHERE id = ${req.body.task_id}`).then(resultz => {
+            res.json('ok')
+          }).catch(err => console.log(err))
+
+        })
     })
     .catch(err => {
       console.log(err)
     })
+})
+//, time_success = ${new Date()}
+
+app.post('/getTasks', (req, res) => {
+  query(`
+    SELECT user_id, COUNT(DISTINCT(title)) as task_count, 
+    sum(status) as status_sum, 
+    first_name, last_name 
+    FROM tasks 
+    INNER JOIN users ON user_id = users.id
+    WHERE project_id = ${req.body.project_id}
+    GROUP BY user_id
+  `)
+    .then(result => {
+      res.json({
+        tasks: result
+      })
+    })
+    .catch(err => {
+      console.log(err)
+    })
+})
+
+app.post('/getUserTasks', (req, res) => {
+  query(`
+    SELECT user_id, COUNT(DISTINCT(title)) as task_count, 
+    sum(status) as status_sum, 
+    first_name, last_name 
+    FROM tasks 
+    INNER JOIN users ON user_id = users.id
+    WHERE project_id = ${req.body.project_id} and users.id = ${session.id}
+    GROUP BY user_id
+  `)
+    .then(result => {
+      res.json({
+        tasks: result
+      })
+    })
+    .catch(err => {
+      console.log(err)
+    })
+})
+
+app.post('/getAllTasksDate', (req, res) => {
+  query(`
+  SELECT * FROM tasks
+  INNER JOIN users ON user_id = users.id
+  WHERE time_start >= '${req.body.time_start}'
+  AND
+  time_end <= '${req.body.time_end}'
+  AND
+  project_id = ${req.body.project_id}
+  `)
+    .then(result => {
+      res.json(result)
+    })
+    .catch(err => console.log(err))
+})
+
+app.post('/getUserTasksDate', (req, res) => {
+  query(`
+  SELECT * FROM tasks
+  WHERE time_start >= '${req.body.time_start}'
+  AND
+  time_end <= '${req.body.time_end}'
+  AND
+  project_id = ${req.body.project_id}
+  AND
+  user_id = ${session.id}`)
+    .then(result => {
+      res.json(result)
+    })
+    .catch(err => console.log(err))
+})
+
+app.post('/updateTaskStatus', (req, res) => {
+  console.log('time time time', req.body.date)
+  query(`UPDATE tasks 
+  SET status = 2 WHERE id = ${req.body.task_id}`)
+    .then(result => {
+      query(`UPDATE tasks SET time_success = '${req.body.date}' WHERE id = ${req.body.task_id}`)
+        .then(results => res.json('ok'))
+        .catch(err => console.log(err))
+    })
+    .catch(err => res.json(err))
 })
 
 /**
@@ -252,12 +350,11 @@ passport.deserializeUser(function (user, done) {
     session.prof_id = user.prof_id
     session.fname = user.first_name
     session.lname = user.last_name
-    // session.isAdmin = user.isAdmin;
     done(null, user)
   } else {
     done(null, false)
   }
-});
+})
 
 passport.use(
   new LocalStrategy({
@@ -273,12 +370,12 @@ passport.use(
           function (error, results) {
             connection.release()
 
-            if (error) throw error;
+            if (error) throw error
 
             if (results.length !== 0) {
-              return done(null, results[0]); // results[0] === user
+              return done(null, results[0])
             } else {
-              return done(null, false);
+              return done(null, false)
             }
           }
         )
@@ -290,3 +387,37 @@ passport.use(
 app.listen(8080, () => {
   console.log("Development server is running on port 8080");
 })
+
+
+function formatDate(date) {
+  let diff = new Date() - date; // разница в миллисекундах
+
+  if (diff < 1000) { // меньше 1 секунды
+    return `0000-00-00 00:00:01`
+  }
+
+  let sec = Math.floor(diff / 1000); // преобразовать разницу в секунды
+
+  if (sec < 60) {
+    return `0000-00-00 00:00:${sec}`
+  }
+
+  let min = Math.floor(diff / 60000); // преобразовать разницу в минуты
+  if (min < 60) {
+    return `0000-00-00 00:${min}:00`
+  }
+
+  // отформатировать дату
+  // добавить ведущие нули к единственной цифре дню/месяцу/часам/минутам
+  let d = date;
+  d = [
+    '0' + d.getDate(),
+    '0' + (d.getMonth() + 1),
+    '' + d.getFullYear(),
+    '0' + d.getHours(),
+    '0' + d.getMinutes()
+  ].map(component => component.slice(-2)); // взять последние 2 цифры из каждой компоненты
+
+  // соединить компоненты в дату
+  return d.slice(0, 3).join('.') + ' ' + d.slice(3).join(':');
+}
