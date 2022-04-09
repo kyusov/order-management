@@ -13,7 +13,7 @@
     "express": "^4.17.1",
     "express-session": "^1.17.1",
     "jshint": "^2.11.1",
-    "moment": "^2.26.0",
+    "moment": "^2.29.2",
     "mysql": "^2.18.1",
     "nodemon": "^2.0.3",
     "passport": "^0.4.1",
